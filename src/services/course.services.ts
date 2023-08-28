@@ -3,26 +3,20 @@ import { client } from "../database";
 import { CourseCreate, courseRead, CourseResult, Courses } from "../interfaces";
 import { courseReadSchema } from "../schemas";
 
-const create = async (payload: CourseCreate): Promise<Array<Courses>> => {
-  const columns = Array.from(new Set(payload.flatMap((el) => Object.keys(el))));
-
-  const values = payload.map((course) => {
-    const newObj: any = {};
-
-    for (const column of columns) {
-      newObj[column] = course[column as keyof Omit<Courses, "id">] || null;
-    }
-    return Object.values(newObj);
-  });
-
-  const queryFormat: string = format(
-    'INSERT INTO "courses" (%I) VALUES %L RETURNING *',
-    columns,
-    values
+const create = async (course: CourseCreate): Promise<Courses> => {
+  const queryString: string = format(
+    `
+    INSERT INTO "courses" (%I)
+    VALUES (%L)
+    RETURNING *;
+    `,
+    Object.keys(course),
+    Object.values(course)
   );
 
-  const query: CourseResult = await client.query(queryFormat);
-  return query.rows;
+  const queryResult: CourseResult = await client.query(queryString);
+
+  return queryResult.rows[0];
 };
 
 const read = async (): Promise<courseRead> => {

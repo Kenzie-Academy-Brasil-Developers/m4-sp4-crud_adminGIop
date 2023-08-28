@@ -3,7 +3,7 @@ import { courseRead, Courses, CourseCreate } from "../interfaces/index";
 import { coursesServices } from "../services";
 
 const create = async (req: Request, res: Response): Promise<Response> => {
-  const courses: Array<Courses> = await coursesServices.create(req.body);
+  const courses = await coursesServices.create(req.body);
   return res.status(201).json(courses);
 };
 

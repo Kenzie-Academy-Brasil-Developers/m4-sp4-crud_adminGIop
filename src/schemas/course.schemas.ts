@@ -6,7 +6,7 @@ const courseSchema = z.object({
   description: z.string().nonempty(),
 });
 
-const courseCreateSchema = courseSchema.omit({ id: true }).array().min(1);
+const courseCreateSchema = courseSchema.omit({ id: true });
 const courseUpdateSchema = courseSchema.partial();
 const courseReadSchema = courseSchema.array();
 
