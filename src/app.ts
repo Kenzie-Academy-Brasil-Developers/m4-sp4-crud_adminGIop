@@ -1,6 +1,14 @@
-import express, { Application, json } from 'express'
+import "express-async-errors";
+import express, { Application, json } from "express";
+import { sessionRouter, userRouter, courseRouter } from "./routers";
+import middlewares from "./middlewares";
 
-const app: Application = express()
-app.use(json())
+const app: Application = express();
+app.use(json());
 
-export default app
+app.use("/users", userRouter);
+app.use("/login", sessionRouter);
+app.use("/courses", courseRouter);
+
+app.use(middlewares.handleErrors);
+export default app;
